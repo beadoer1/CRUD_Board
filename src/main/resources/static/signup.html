@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <meta charset="UTF-8">
+    <title>회원가입 페이지</title>
+</head>
+<body>
+<div id="login-form">
+    <div id="login-title">Sign up Select Shop</div>
+
+    <form action="/user/signup" method="post">
+        <div class="login-id-label">Nickname</div>
+        <input type="text" name="username" class="login-input-box" placeholder="3자 이상,'알파벳 대소문자(a~z, A~Z), 숫자(0~9)'사용">
+        <div th:if="${signupMessage} == '중복 ID'" class="alert alert-danger" role="alert">중복된 닉네임입니다.</div>
+        <div th:if="${signupMessage} == '양식 불일치'" class="alert alert-danger" role="alert">양식에 맞지 않는 닉네임 입니다.</div>
+
+        <div class="login-id-label">Password</div>
+        <input type="password" name="password" class="login-input-box" placeholder="최소 4자 이상이며, ID 포함 X">
+        <div th:if="${signupMessage} == '닉네임 포함'" class="alert alert-danger" role="alert">닉네임이 포함되어 있습니다.</div>
+        <div th:if="${signupMessage} == 'pw 짧음'" class="alert alert-danger" role="alert">PW가 너무 짧습니다.</div>
+
+
+        <div class="login-id-label">PasswordCheck</div>
+        <input type="password" name="passwordCheck" class="login-input-box" placeholder="한 번 더 입력해주세요.">
+        <div th:if="${signupMessage} == '비밀번호 불일치'" class="alert alert-danger" role="alert">비밀번호가 일치하지 않습니다.</div>
+
+        <button id="login-id-submit">회원 가입</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--  bootstrap CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--  bootstrap Javascript  -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <!--  ajax   -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--  구글 웹폰트  -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Stylish&display=swap" rel="stylesheet">
+    <!--  자체 CSS  -->
+    <link rel="stylesheet" href="css/style.css">
+    <!--  자체 Javascript  -->
+    <script src="script/script.js"></script>
+    <!--  og tag 등록 -->
+    <meta property="og:title" content="CRUD 게시판 구현">
+    <meta property="og:description" content="하고싶은 이야기를 남겨보세요!!">
+    <meta property="og:image" content="images/bulletinboard.png">
+
+    <title>한 마디씩~!</title>
+</head>
+<body>
+<div class="wrap">
+    <div class="title">
+        <div class="jumbotron">
+            <h1 class="display-4">한 마디씩~!</h1>
+            <div th:if="${username} != null" id="header-title-login-user">
+                <span th:text="${username}" id="username"></span> 님 반갑습니다.
+            </div>
+            <p class="lead">Spring 프레임워크를 이용하여 CRUD 기능을 구현해 보았습니다.</p>
+            <p class="lead">하고싶으신 말씀이 있으시면 한 마디씩 써주세요.^_^ (수정/삭제는 제목을 눌러주세요.)</p>
+            <p th:if="${username} == null" class="lead button-wrap">
+                <button type="button" class="btn btn-primary" onclick="location.href='/user/login';" >login</button>
+                <button type="button" class="btn btn-secondary" onclick="alert('로그인이 필요합니다.'); location.href='/user/login';" >글쓰기</button>
+            </p>
+            <p th:if="${username} != null" class="lead button-wrap">
+                <button type="button" class="btn btn-primary" onclick="alert('안녕히 가세요!'); location.href='/user/logout';" >logout</button>
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#writingModal">글쓰기</button>
+            </p>
+            <hr class="my-4">
+        </div>
+    </div>
+    <!--  modal writing  -->
+    <div class="modal fade" id="writingModal" tabindex="-1" role="dialog" aria-labelledby="writingModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-main-header">
+                        <h5 class="modal-title" id="writingModalLabel">게시물 작성</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">작성자 : <strong th:text="${username}" id="recipient-name"></strong> 님</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="title-name" class="col-form-label">제목</label>
+                            <input type="text" class="form-control" id="title-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">작성내용</label>
+                            <textarea class="form-control" id="message-text" style="white-space:pre-line;"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫 기</button>
+                    <button type="button" class="btn btn-primary" onclick="postBulletin()">저장하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">작성자</th>
+                <th scope="col">제 목</th>
+                <th scope="col">작성일자</th>
+            </tr>
+            </thead>
+            <tbody id = "tbody">
+                <!-- 게시물 목록이 들어가는 부분 -->
+
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal show writing -->
+    <div class="modal fade" id="showModalCenter" tabindex="-1" role="dialog" aria-labelledby="showModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div id="showModal">
+                    <!-- 게시물 조회창이 들어가는 부분 -->
+                </div>
+                <div id="commentbox">
+                    <div class="modal-body bulletin-comment">
+                        <label for="comment-text" class="col-form-label">Comment(로그인이 필요합니다.)</label>
+                        <textarea class="form-control comment-text" id="comment-text" style="white-space:pre-line;"></textarea>
+                    </div>
+                    <div class="modal-footer bulletin-btns">
+                        <p th:if="${username} == null" class="lead button-wrap">
+                            <button type="button" class="btn btn-primary" onclick="alert('로그인이 필요한 기능입니다.'); location.href='/user/login';" >댓글달기</button>
+                        </p>
+                        <p th:if="${username} != null" class="lead button-wrap" id="postComment" >
+                        </p>
+                    </div>
+                    <div class="modal-body comments" id="comments">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--  modal updating  -->
+    <div class="modal fade" id="updatingModal" tabindex="-1" role="dialog" aria-labelledby="updatingModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" id="updateModal">
+                <!-- 게시물 수정창이 들어가는 부분 -->
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
